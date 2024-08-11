@@ -19,6 +19,12 @@ export enum UserStatus {
   banned = 'banned',
   returned = 'returned',
 }
+export enum OrderStatus {
+  pending = 'pending',
+  active = 'active',
+  banned = 'banned',
+  returned = 'returned',
+}
 
 
 

@@ -1,34 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-
-export class RegisterUser {
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsString()
-  password: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  username: string;
-
-  @ApiProperty()
-  @IsEmail()
-  email: string;
-
-  @ApiProperty()
-  // @IsString()
-  phone: string;
-}
+import { UserStatus, UserType } from 'src/utils/enum';
 
 export class LoginUser {
   @ApiProperty()
-  name: string;
-
+  password: string;
   @ApiProperty()
-  profileImg: string;
-
-  @ApiProperty()
-  // @IsEmail()
-  email: string;
+  phone: string;
 }

@@ -6,19 +6,23 @@ import {
   Param,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 import { OrderDto } from './dto/order.dto';
+import { AuthGuard } from 'src/guard/auth.guard';
 
 @Controller('order')
 @ApiTags('Order')
 export class OrderController {
   constructor(private readonly service: OrderService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() dto: OrderDto) {
-    return this.service.create(dto);
+  create(@Request() { user }, @Body() dto: OrderDto) {
+    return this.service.create(user['_id'], dto);
   }
 
   @Get('all')

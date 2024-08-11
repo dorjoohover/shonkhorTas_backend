@@ -6,7 +6,6 @@ import appConfig from './config/app.config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServiceModule } from './resource/service/service.module';
 import { OrderModule } from './resource/order/order.module';
-import { PaymentModule } from './resource/payment/payment.module';
 import { AuthModule } from './resource/auth/auth.module';
 import { UserModule } from './resource/user/user.module';
 @Global()
@@ -28,7 +27,6 @@ import { UserModule } from './resource/user/user.module';
     UserModule,
     ServiceModule,
     OrderModule,
-    PaymentModule
   ],
   controllers: [AppController],
   providers: [AppService],

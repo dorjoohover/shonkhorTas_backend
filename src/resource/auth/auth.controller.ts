@@ -16,15 +16,15 @@ import { Model } from 'mongoose';
 import appConfig from '../../config/app.config';
 import { UserStatus } from '../../utils/enum';
 import { User, UserDocument } from '../../schema/user.schema';
-import { LoginUser, RegisterUser } from './auth.dto';
+import { LoginUser } from './auth.dto';
 import { AuthService } from './auth.service';
+import { UserDto } from '../user/user.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly service: AuthService,
     @InjectModel(User.name) private model: Model<UserDocument>,
-    
   ) {}
 
   // async sendConfirmMail(email: string, code: string) {
@@ -56,28 +56,30 @@ export class AuthController {
   // }
   @Post('register')
   @ApiOperation({ description: 'hereglegch uusgeh' })
-  async createUser(@Body() dto: RegisterUser) {
-    const user = await this.service.register(dto);
-    if (user) {
-      //   const code =
-      //     Math.round(Math.random() * 10000000000).toString() + Date.now();
-      //   user.code = code;
-      //   user.save();
-      //   await this.sendConfirmMail(user.email, code);
-      return false;
-    }
+  async createUser(@Body() dto: UserDto) {
+    return await this.service.register(dto);
   }
 
   @Post('login')
   @ApiOperation({ description: 'login hiih' })
   async login(@Body() dto: LoginUser) {
     const user = await this.service.login(dto);
-    if (user.status) {
-      const token = await this.service.signPayload(user.user.email);
+    if (user.success) {
+      const token = await this.service.signPayload(user.user.phone);
 
-      return { status: user.status, token };
+      return {
+        success: true,
+        id: token,
+        message: 'Амжилттай нэвтэрлээ.',
+        status: 201,
+      };
     } else {
-      return { status: user.status, message: user.message };
+      return {
+        success: false,
+        status: 201,
+        id: '',
+        message: user.message,
+      };
     }
   }
 

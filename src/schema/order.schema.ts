@@ -1,43 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { OrderStatus } from 'src/utils/enum';
 
 export type OrderDocument = Order & Document;
 
-export class OrderDetail {
-  @Prop()
-  id: string;
-
-  @Prop()
-  value: string;
-
-  @Prop()
-  parentId?: string;
-
-}
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Order extends Document {
-  @Prop({ required: true })
-  name: string;
-
-  @Prop({ required: true })
-  index: number;
-
-  @Prop({type: Array<OrderDetail>})
-  value: OrderDetail[];
-  @Prop()
-  type: string;
-
   @Prop({ type: mongoose.Types.ObjectId, ref: 'users' })
-  user?: string;
+  user: string;
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'services' })
+  service: string;
 
-  @Prop()
-  other: boolean;
-
-  @Prop({ default: false })
-  isSearch: boolean;
-
-  @Prop({ default: true })
-  isUse: boolean;
+  @Prop({ type: String, enum: OrderStatus, default: OrderStatus.pending })
+  status: OrderStatus;
 }
 
-export const OrderSchema = SchemaFactory.createForClass(Order)
+export const OrderSchema = SchemaFactory.createForClass(Order);

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { UserType } from '../../utils/enum';
 import { User, UserDocument } from '../../schema';
-import { PointHistory, UpdateUserDto } from './user.dto';
+import { UserDto } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -26,22 +26,10 @@ export class UserService {
       return await this.model.findOne({ email: id });
     }
   }
-  async updatePointHistory(id: string, body: PointHistory, point: number) {
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      return await this.model.findByIdAndUpdate(id, {
-        $push: {
-          pointHistory: body
-        }, 
-        point: point
-      })
-    } else {
-      return await this.model.findOne({ email: id });
-    }
-  }
 
-  async getUserByEmailOrPhone(email: string) {
+  async getUserByEmailOrPhone(phone: string) {
     try {
-      const res = await this.model.findOne({ email: email });
+      const res = await this.model.findOne({ phone: phone });
 
       return res;
     } catch (error) {
@@ -49,22 +37,10 @@ export class UserService {
     }
   }
 
-  async editUser(user: UserDocument, dto: UpdateUserDto) {
-    
+  async editUser(user: UserDocument, dto: UserDto) {
     try {
- 
       return await this.model.findByIdAndUpdate(user['_id'], {
-        phone: dto.phone ?? user.phone,
-        userType: dto.userType ?? user.userType,
-        birthday: dto.birthday ?? user.birthday,
-        profileImg: dto.profileImg ?? user.profileImg,
-        status: dto.status,
-        agentAddition:
-          dto.userType == UserType.agent ? dto.agentAddition : null,
-        organizationAddition:
-          dto.userType == UserType.organization
-            ? dto.organizationAddition
-            : null,
+        ...dto,
       });
     } catch (error) {
       throw new HttpException('server error', 500);

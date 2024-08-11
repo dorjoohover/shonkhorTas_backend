@@ -2,6 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class ServiceDto {
     @ApiProperty()
-
-    user: string
+    img: string
+    @ApiProperty()
+    text: string
+    @ApiProperty()
+    count: number
 }

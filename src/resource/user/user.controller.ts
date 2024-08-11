@@ -19,9 +19,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { User, UserDocument } from '../../schema';
-import { FeedbackDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { AuthGuard } from '../../guard/auth.guard';
+import { UserDto } from './user.dto';
 @ApiTags('User')
 @Controller('user')
 export class UserController {
@@ -89,14 +89,10 @@ export class UserController {
     }
   }
 
-  
-
-
-
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   @Put()
-  async editUser(@Request() { user }, @Body() dto: UpdateUserDto) {
+  async editUser(@Request() { user }, @Body() dto: UserDto) {
     if (!user) throw new HttpException('user not found', 400);
     // dto.socials = JSON.parse(dto.socials);
 
@@ -115,28 +111,6 @@ export class UserController {
     try {
       await this.model.deleteMany();
       return true;
-    } catch (error) {
-      throw new HttpException(error.message, 500);
-    }
-  }
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth('access-token')
-  @ApiParam({ name: 'id' })
-  @Patch('bookmark/:id')
-  async bookmark(@Request() { user }: { user: User }, @Param('id') id: number) {
-    try {
-      const body = user.bookmarks.includes(id)
-        ? {
-            $pull: {
-              bookmarks: id,
-            },
-          }
-        : {
-            $push: {
-              bookmarks: id,
-            },
-          };
-      return this.model.findByIdAndUpdate(user['_id'], body);
     } catch (error) {
       throw new HttpException(error.message, 500);
     }
